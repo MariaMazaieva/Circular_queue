@@ -1,31 +1,20 @@
- // #include "queue.h"
+ #include "queue.h"
  #include <stdio.h>
  #include <stdlib.h>
  #include <stdbool.h>
 
- typedef struct {
-     void **q_array;
-     int capacity;
-     int count;
-     int head;
-     int tail;
-
- } queue_t;
 
  queue_t* create_queue(int capacity){
     queue_t* q = (queue_t*)malloc(sizeof(queue_t));
-    if (q == NULL) return NULL;
-
     q->q_array = (void**)malloc(sizeof(void*) * capacity);
-    if (q->q_array == NULL) {
-     free(q);
-     return NULL;
-    }
 
     q->capacity = capacity;
     q->count = 0;
     q->head = 0;
     q->tail = 0;
+    for (int i = 0; i < capacity; i++) {
+     q->q_array[i] = NULL;
+    }
 
     return q;
 
@@ -57,12 +46,15 @@
   * returns: the first element on success; NULL otherwise
   */
  void* pop_from_queue(queue_t *queue){
-
+  if (queue->count == 0) {
+   return NULL;
+  }
   void *element = queue->q_array[queue->head];
   queue->head = (queue->head + 1) % queue->capacity;
   queue->count--;
 
-  return element ? element : NULL; // Return the retrieved data
+
+  return element; // Return the retrieved data
 
  }
 
@@ -72,11 +64,16 @@
   * returns: the idx-th element on success; NULL otherwise
   */
  void* get_from_queue(queue_t *queue, int idx){
+  if (idx < 0 || idx >= queue->count) {
+   return NULL; // Invalid index
+  }
   int position = (queue->head + idx) % queue->capacity;
-  return queue->q_array[position];
+  void* element = queue->q_array[position];
+  return element
+      ;
  }
 
  /* gets number of stored elements */
  int get_queue_size(queue_t *queue){
-   return queue -> count;
+ return queue -> count ;
  }
